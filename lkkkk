@@ -1,0 +1,116 @@
+</head>
+<body>
+    <header>
+        <div class="container flex">
+            <div class="logo">QUICK SHOP BY ANKITA</div>
+            <div class="menu-toggle">☰</div>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#products">Products</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><div class="cart-icon">🛒<span class="cart-count">0</span></div></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Welcome to QuickShop by ankita</h1>
+            <a href="#products" class="btn">Shop Now</a>
+        </div>
+    </section>
+
+    <section class="products" id="products">
+        <div class="container">
+            <h2 class="section-title">Our Products</h2>
+            <div class="product-grid">
+                <div class="product-card">f
+                    <div class="product-img"><img src="C:````````````````````````````````````\pumA.webp" alt="Product"></div>
+                    <div class="product-info">
+                        <h3 class="product-title">RCB x PUMA jersey</h3>
+                        <p class="product-price">$10</p>
+                        <button class="btn add-to-cart" data-id="1" data-name="RCB x PUMA jersey" data-price="10">Add to Cart</button>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img"><img src="C:\Users\Lenovo\Downloads\shoes.webp" alt="Product"></div>
+                    <div class="product-info">
+                        <h3 class="product-title">red tape shoes</h3>
+                        <p class="product-price">$16</p>
+                        <button class="btn add-to-cart" data-id="2" data-name="red tape shoes" data-price="16">Add to Cart</button>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img"><img src="C:\Users\Lenovo\Downloads\hm.webp" alt="Product"></div>
+                    <div class="product-info">
+                        <h3 class="product-title">jeans</h3>
+                        <p class="product-price">$32</p>
+                        <button class="btn add-to-cart" data-id="3" data-name="jeans" data-price="32">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact" id="contact">
+        <div class="container">
+            <h2 class="section-title">Contact Us</h2>
+            <form id="contact-form">
+                <input type="text" placeholder="Name" required style="width:100%;padding:0.5rem;margin-bottom:1rem">
+                <input type="email" placeholder="Email" required style="width:100%;padding:0.5rem;margin-bottom:1rem">
+                <textarea placeholder="Message" required style="width:100%;padding:0.5rem;min-height:100px;margin-bottom:1rem"></textarea>
+                <button type="submit" class="btn">Send</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy;  QuickShop by ankita</p>
+            <P>&copy; for more contact us on instagram @.....</P>
+        </div>
+    </footer>
+
+    <div class="modal" id="cart-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Your Cart</h2>
+            <div id="cart-items"><p>Your cart is empty</p></div>
+            <div id="cart-total">Total: $0.00</div>
+            <button class="btn" id="checkout-btn">Checkout</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded',()=>{
+            const menuToggle=document.querySelector('.menu-toggle');
+            const nav=document.querySelector('nav');
+            menuToggle.addEventListener('click',()=>nav.classList.toggle('active'));
+            
+            let cart=[];
+            const updateCart=()=>{
+                document.querySelector('.cart-count').textContent=cart.reduce((t,i)=>t+i.quantity,0);
+                const ci=document.getElementById('cart-items');
+                if(cart.length===0){ci.innerHTML='<p>Your cart is empty</p>';document.getElementById('cart-total').textContent='Total: $0.00';return}
+                ci.innerHTML=cart.map(i=>`<div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid #eee"><div><p>${i.name}</p><small>$${i.price} x ${i.quantity}</small></div><div>$${(i.price*i.quantity).toFixed(2)} <button onclick="removeItem('${i.id}')" style="background:none;border:none;color:red;cursor:pointer">X</button></div></div>`).join('');
+                document.getElementById('cart-total').textContent=`Total: $${cart.reduce((t,i)=>t+(i.price*i.quantity),0).toFixed(2)}`;
+            };
+            window.removeItem=id=>{cart=cart.filter(i=>i.id!==id);updateCart()};
+            document.querySelectorAll('.add-to-cart').forEach(b=>b.addEventListener('click',()=>{
+                const id=b.getAttribute('data-id'),name=b.getAttribute('data-name'),price=+b.getAttribute('data-price');
+                const item=cart.find(i=>i.id===id);
+                item?item.quantity++:cart.push({id,name,price,quantity:1});
+                updateCart();
+            }));
+            document.querySelector('.cart-icon').addEventListener('click',()=>document.getElementById('cart-modal').style.display='flex');
+            document.querySelector('.close-modal').addEventListener('click',()=>document.getElementById('cart-modal').style.display='none');
+            window.addEventListener('click',e=>e.target===document.getElementById('cart-modal')&&(document.getElementById('cart-modal').style.display='none'));
+            document.getElementById('checkout-btn').addEventListener('click',()=>{if(cart.length>0){alert('Order placed!');cart=[];updateCart();document.getElementById('cart-modal').style.display='none'}});
+            document.getElementById('contact-form').addEventListener('submit',e=>{e.preventDefault();alert('Message sent!');e.target.reset()});
+            document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();const t=document.querySelector(a.getAttribute('href'));if(t){window.scrollTo({top:t.offsetTop-70,behavior:'smooth'});nav.classList.remove('active')}}));
+        });
+    </script>
+</body>
+</html>
